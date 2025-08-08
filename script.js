@@ -47,4 +47,44 @@ function playGame() {
         console.log("Tie!");
     }
 }
-playGame();
+
+function sumOfTripledEvens(array) {
+    return array
+        .filter((a) => a % 2 == 0)
+        .map((a) => a * 3)
+        .reduce((a, b) => a + b, 0);
+}
+
+let test = "big-red-ball";
+function camelize(str) {
+    return str
+        .split("-")
+        .map((word, index) =>
+            index == 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
+        )
+        .join("");
+}
+
+function unique(arr) {
+    let output = [];
+    for (const element of arr) {
+        if (!output.includes(element)) {
+            output.push(element);
+        }
+    }
+    return output;
+}
+
+let strings = [
+    "Hare",
+    "Krishna",
+    "Hare",
+    "Krishna",
+    "Krishna",
+    "Krishna",
+    "Hare",
+    "Hare",
+    ":-O",
+];
+
+alert(unique(strings)); // Hare, Krishna, :-O
