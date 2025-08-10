@@ -2,89 +2,74 @@ let humanScore;
 let computerScore;
 
 function getComputerChoice() {
-    let choices = ["rock", "paper", "scissors"];
-    randomInput = Math.floor(Math.random() * choices.length);
-    return choices[randomInput];
+  let choices = ["rock", "paper", "scissors"];
+  randomInput = Math.floor(Math.random() * choices.length);
+  return choices[randomInput];
 }
 function getHumanChoice() {
-    return prompt("Rock, paper, or scissors?");
+  return prompt("Rock, paper, or scissors?");
 }
 function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.toLowerCase();
-    const matchups = new Map([
-        ["rock,rock", 0],
-        ["rock,paper", -1],
-        ["rock,scissors", 1],
-        ["paper,rock", 1],
-        ["paper,paper", 0],
-        ["paper,scissors", -1],
-        ["scissors,scissors", 0],
-        ["scissors,rock", -1],
-        ["scissors,paper", 1],
-    ]);
+  humanChoice = humanChoice.toLowerCase();
+  const matchups = new Map([
+    ["rock,rock", 0],
+    ["rock,paper", -1],
+    ["rock,scissors", 1],
+    ["paper,rock", 1],
+    ["paper,paper", 0],
+    ["paper,scissors", -1],
+    ["scissors,scissors", 0],
+    ["scissors,rock", -1],
+    ["scissors,paper", 1],
+  ]);
 
-    if (matchups.get(`${humanChoice},${computerChoice}`) == 1) {
-        humanScore++;
-        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-    } else if (matchups.get(`${humanChoice},${computerChoice}`) == 0) {
-        console.log(`Tie! Y'all both chose ${humanChoice}`);
-    } else {
-        computerScore++;
-        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-    }
+  const roundResult = document.createElement("p");
+  const results = document.querySelector(".results");
+  const playerScoreElement = document.querySelector(".score-player");
+  const computerScoreElement = document.querySelector(".score-computer");
+
+  if (matchups.get(`${humanChoice},${computerChoice}`) == 1) {
+    humanScore++;
+
+    roundResult.textContent = `You win! ${humanChoice} beats ${computerChoice}`;
+    playerScoreElement.textContent = `Player Score: ${humanScore}`;
+  } else if (matchups.get(`${humanChoice},${computerChoice}`) == 0) {
+    roundResult.textContent = `Tie! Y'all both chose ${humanChoice}`;
+  } else {
+    computerScore++;
+    roundResult.textContent = `You lose! ${computerChoice} beats ${humanChoice}`;
+    computerScoreElement.textContent = `Computer Score: ${computerScore}`;
+  }
+  results.appendChild(roundResult);
+  console.log(humanScore);
+
+  if (humanScore == 5 || computerScore == 5) {
+    const winner = humanScore == 5 ? "You" : "Computer";
+
+    const announceWinner = document.createElement("p");
+    announceWinner.textContent = `${winner} won the game!`;
+    results.appendChild(announceWinner);
+
+    document
+      .querySelectorAll(".button-rock, .button-paper, .button-scissors")
+      .forEach((btn) => (btn.style.display = "none"));
+  }
 }
 function playGame() {
-    humanScore = 0;
-    computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        playRound(getHumanChoice(), getComputerChoice());
-    }
-    if (humanScore < computerScore) {
-        console.log("You Lose!");
-    } else if (humanScore > computerScore) {
-        console.log("You win!");
-    } else {
-        console.log("Tie!");
-    }
+  humanScore = 0;
+  computerScore = 0;
+  const rockButton = document.querySelector(".button-rock");
+  const paperButton = document.querySelector(".button-paper");
+  const scissorsButton = document.querySelector(".button-scissors");
+  rockButton.addEventListener("click", () =>
+    playRound("rock", getComputerChoice())
+  );
+  paperButton.addEventListener("click", () =>
+    playRound("paper", getComputerChoice())
+  );
+  scissorsButton.addEventListener("click", () =>
+    playRound("scissors", getComputerChoice())
+  );
 }
 
-function sumOfTripledEvens(array) {
-    return array
-        .filter((a) => a % 2 == 0)
-        .map((a) => a * 3)
-        .reduce((a, b) => a + b, 0);
-}
-
-let test = "big-red-ball";
-function camelize(str) {
-    return str
-        .split("-")
-        .map((word, index) =>
-            index == 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
-        )
-        .join("");
-}
-
-function unique(arr) {
-    let output = [];
-    for (const element of arr) {
-        if (!output.includes(element)) {
-            output.push(element);
-        }
-    }
-    return output;
-}
-
-let strings = [
-    "Hare",
-    "Krishna",
-    "Hare",
-    "Krishna",
-    "Krishna",
-    "Krishna",
-    "Hare",
-    "Hare",
-    ":-O",
-];
-
-alert(unique(strings)); // Hare, Krishna, :-O
+playGame();
